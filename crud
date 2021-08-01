@@ -1,0 +1,7 @@
+<?php
+
+use Helpers\CommandParser;
+
+require_once __DIR__ . '/vendor/autoload.php';
+
+$command = (new CommandParser())->run();
