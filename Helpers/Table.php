@@ -20,6 +20,7 @@ class Table
     {
         return $this->fillable;
     }
+
     /**
      * Get fields
      *
@@ -32,6 +33,32 @@ class Table
 
     public function addRow($row)
     {
-        $this->row[$this->autoIncrement++] = $row;
+        $this->rows[$this->autoIncrement++] = $row;
+    }
+
+
+    /*
+    *
+    *Returns the index (ID) of the row if found
+        Otherwise returns -1 for not found
+    *
+    * @return int
+    *
+    * */
+    public function findRow($target)
+    {
+        foreach ($this->rows as $key => $row) {
+            if (($target == array_intersect_assoc($target, $row))) {
+                dump(array_intersect_assoc($target, $row));
+                return $key;
+            }
+        }
+        return -1;
+    }
+
+
+    public function getRowByID($id)
+    {
+        return $this->rows[$id] ?? -1;
     }
 }
