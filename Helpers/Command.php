@@ -16,7 +16,7 @@ class Command
             $this->table = unserialize(file_get_contents($onStorage));
         } else {
             dump('from_class');
-            $this->table = new $table;
+            $this->table = new $table();
         }
     }
 

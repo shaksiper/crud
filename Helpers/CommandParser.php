@@ -30,11 +30,13 @@ class CommandParser
         ////////////////////////////////////////////////////////
 
         // help output
-        if (count($inputs) === 1)
+        if (count($inputs) === 1) {
             $this->printCommandList();
+        }
 
-        if ($inputs[1] === 'list')
+        if ($inputs[1] === 'list') {
             dd($this->tables);
+        }
 
         ////////////////////////////////////////////////////////
 
@@ -44,14 +46,16 @@ class CommandParser
         ////////////////////////////////////////////////////////
 
         // if method is not acceptable
-        if (!isset($this->methods[$methodAndTable[0]]))
+        if (!isset($this->methods[$methodAndTable[0]])) {
             $this->error('Current method is not supported. Please run "php crud" for help.');
+        }
 
         ////////////////////////////////////////////////////////
 
         // if table name is missing
-        if (!isset($methodAndTable[1]) || empty($methodAndTable[1]))
+        if (!isset($methodAndTable[1]) || empty($methodAndTable[1])) {
             $this->error('Table name is required after the methos. Please run "php crud" for help.');
+        }
 
         ////////////////////////////////////////////////////////
 
@@ -59,8 +63,9 @@ class CommandParser
 
         ////////////////////////////////////////////////////////
 
-        if (!isset($this->tables[$methodAndTable[1]]))
+        if (!isset($this->tables[$methodAndTable[1]])) {
             $this->error('Table not found. Please run "php crud:list" for help.');
+        }
 
         ////////////////////////////////////////////////////////
 
@@ -103,7 +108,7 @@ class CommandParser
         /**
          * @var \Helpers\Command
          */
-        $commandObject = new $this->methods[$this->method];
+        $commandObject = new $this->methods[$this->method]();
 
         $commandObject->setTable('Tables\\' . $this->tables[$this->table]);
         $commandObject->setArguments($this->arguments);
@@ -122,9 +127,11 @@ class CommandParser
         $files = scandir(__DIR__ . '/../Tables', SCANDIR_SORT_ASCENDING);
         $tableFiles = [];
 
-        foreach ($files as $file)
-            if (substr($file, -4) == '.php')
+        foreach ($files as $file) {
+            if (substr($file, -4) == '.php') {
                 $tableFiles[] = substr($file, 0, -4);
+            }
+        }
 
         $tables = [];
 
@@ -159,14 +166,37 @@ class CommandParser
             'delete:{table} {primary_key}         ',
         ];
 
-        foreach ($output as $line)
+        foreach ($output as $line) {
             echo $line . "\n";
+        }
 
         exit;
     }
 
-    private function error($msg)
+    public static function error($msg)
     {
         die("\e[31m" . $msg . "\e[0m\n");
+    }
+
+    public static function printMessage($msg, $type = 0)
+    {
+        switch ($type) {
+            case 1:
+               echo "\e[32";
+                break;
+
+            case 2:
+               echo "\e[93";
+                break;
+            case 3:
+               echo "\e[31";
+               die("\e[0m\n");
+
+            default:
+
+                break;
+        }
+        echo $msg;
+        echo("\e[0m\n");
     }
 }

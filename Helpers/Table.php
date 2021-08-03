@@ -56,9 +56,15 @@ class Table
         return -1;
     }
 
-
     public function getRowByID($id)
     {
         return $this->rows[$id] ?? -1;
+    }
+
+    public function deleteRow($rowId)
+    {
+        if (isset($this->rows[$rowId])) {
+            unset($this->rows[$rowId]);
+        }
     }
 }
