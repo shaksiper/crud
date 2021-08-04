@@ -10,7 +10,7 @@ class DeleteCommand extends Command
     public function handle()
     {
         # code...
-        dump($this->table);
+        /* dump($this->table); */
 
         $target = [];
         foreach (explode(' ', $this->arguments['pk']) as $condition) {
@@ -20,12 +20,14 @@ class DeleteCommand extends Command
             }
             $target[$clause[0]] = $clause[1];
         }
-        $result = $this->table->getRowByID($this->table->findRow($target));
+        $resultId = $this->table->findRow($target);
+        $result = $this->table->getRowByID($resultId);
 
-        if (!empty($result)) {
-            Parser::printMessage("Are you sure to delete the row? [Yes/No]");
+        dump($result);
+        if ($resultId > 0) {
+            Parser::printMessage("Are you sure to delete the row? [Yes/No]", 2);
             if (in_array(strtolower(readline()), array("yes", "y"))) {
-                $this->table->deleteRow($this->table->findRow($target));
+                $this->table->deleteRow($resultId);
             }
         }
         $this->saveTable(); //save table to disk

@@ -182,21 +182,20 @@ class CommandParser
     {
         switch ($type) {
             case 1:
-               echo "\e[32";
+               echo "\e[32m";
                 break;
 
             case 2:
-               echo "\e[93";
+               echo "\e[93m";
                 break;
             case 3:
-               echo "\e[31";
-               die("\e[0m\n");
+               echo "\e[31m";
+               break;
 
             default:
 
                 break;
         }
-        echo $msg;
-        echo("\e[0m\n");
+        echo $msg."\e[0m";
     }
 }

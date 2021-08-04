@@ -7,6 +7,7 @@ class Command
     protected Table $table;
     protected $arguments = [];
 
+
     public function setTable($table)
     {
         $onStorage = __DIR__ . '/../Storage/' . sha1($table);
