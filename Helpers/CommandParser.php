@@ -77,6 +77,7 @@ class CommandParser
 
         switch ($this->method) {
             case 'update':
+            break;
             case 'delete':
                 $arguments['pk'] = $inputs[2];
 

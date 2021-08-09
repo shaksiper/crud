@@ -11,21 +11,10 @@ class Table
 
     protected $rows = [];
 
-    /*
-    * The arrays of constraints. They include which function corresponds to each constraint
-    * */
-    protected static $unitConstraints = [
-        'string' => 'isString',
-        'integer' => 'isInteger',
-        ];
-    protected static $singleConstraints = [
-        'unique' => 'isUnique',
-    ];
     protected static $defaults = [
         'current_timestamp' => 'time',
         /* 'null' => function() {return null;}, */
     ];
-
     /**
      * Get fillable fields
      *
@@ -90,10 +79,12 @@ class Table
 
     /*
     *
-    *Checks given constaints for the field
+    *Checks given constraints for the field
     *
     * @return true if all constrints passes
     *
+    * TODO: - Refactor these functions into closures so that they won't
+    * pollute the global space
     * */
     public function checkConstraint($input, $type): bool
     {
@@ -106,8 +97,7 @@ class Table
                     return false;
                 }
             } elseif (array_key_exists($pair[0], self::$singleConstraints)) {
-                $method = self::$singleConstraints[$pair[0]];
-                if (!$this->{$method}($input, $type)) {
+                if (!$this->{self::$singleConstraints[$pair[0]]}($input, $type)) {
                     return false;
                 }
             }
@@ -124,31 +114,7 @@ class Table
         }
     }
 
-    /*
-    * @return true if $target is string in lenght of $size
-    *
-    * */
-    private function isString($target, $len)
-    {
-        return strlen($target) <= $len;
-    }
-
-    /*
-    *@return true if $target is int
-    * */
-    private function isInteger($target)
-    {
-        return is_int($target);
-    }
-
-    /**
-    *
-    *Checks whether the input value is unique
-    *
-    * @param string $target is looked in $targetColumn columns of rows
-    *
-    */
-    private function isUnique($target, $targetColumn)
+    public function isUnique($target, $targetColumn)
     {
         $columns = array_column($this->rows, $targetColumn);
         return !in_array($target, $columns);

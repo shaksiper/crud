@@ -4,6 +4,7 @@ namespace Commands;
 
 use Helpers\Command;
 use Helpers\CommandParser as Parser;
+use Helpers\Request;
 
 class CreateCommand extends Command
 {
@@ -19,21 +20,22 @@ class CreateCommand extends Command
                 do {
                     Parser::printMessage($field.': ');
                     $line = readline();
+                    $request = new Request($line, $field);
                     if (empty($line)) {
                         if (($row[$field] = $this->table->fetchDefault($field)) == null) {
                             Parser::printMessage("$field is required.\n", 2);
                             continue;
                         }
                     }
-                    if (($constResult = $this->table->checkConstraint($line, $field)) == false) {
-                        Parser::printMessage("The input doesn't checks out the constraints\n");
+                    if (($constResult = !in_array(false, $request->validate($constraint))) == false) {
+                        Parser::printMessage("The input doesn't checks out the constraints\n", 3);
                     }
+
                     $row[$field] = $line;
                 } while (!$constResult);
             }
         }
-        /* $row['created_at'] = time(); */
-        $row['created_at'] = parent::$defaults['created_at']();
+        $row['created_at'] = $this->table->fetchDefault('current_timestamp');
         $this->table->addRow($row);
         $this->saveTable(); //save table to disk
 

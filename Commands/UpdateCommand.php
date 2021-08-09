@@ -4,6 +4,7 @@ namespace Commands;
 
 use Helpers\Command;
 use Helpers\CommandParser as Parser;
+use Helpers\Request;
 
 class UpdateCommand extends Command
 {
@@ -25,8 +26,9 @@ class UpdateCommand extends Command
                 Parser::printMessage($field."($row[$field]):");
                 do {
                     $line = readline();
-                    if (($constResult = $this->table->checkConstraint($line, $field)) == false) {
-                        Parser::printMessage("The input doesn't checks out the constraints\n");
+                    $request = new Request($line, $field);
+                    if (($constResult = !in_array(false, $request->validate($constraint))) == false) {
+                        Parser::printMessage("The input doesn't checks out the constraints\n", 3);
                     }
                 } while (!$constResult);
                 if (!empty($line)) {

@@ -8,7 +8,7 @@ class Users extends Table
 {
     protected $fields = [
         'name' => ['string:6'],
-        'email' => ['unique'],
+        'email' => ['unique:Users'],
         'created_at' => ['default:current_timestamp'],
         'updated_at' => ['on_update:current_timestamp'],
     ];
